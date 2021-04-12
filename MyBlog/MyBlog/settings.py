@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # custom apps
     'blog',
+    'users',
     # Default apps
     'django.contrib.admin',
     'django.contrib.auth',
