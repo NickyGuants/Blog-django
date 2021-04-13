@@ -3,24 +3,27 @@ from django.views.generic import ListView, DetailView
 from .models import BlogPost, Category
 from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 #Category
-class CategoryList(ListView):
+class CategoryList(LoginRequiredMixin,ListView):
     model =Category
     template_name='blog/category_list.html'
 
-class CategoryDetail(DetailView):
+class CategoryDetail(LoginRequiredMixin,DetailView):
     model = Category
     template_name = 'blog/category_detail.html'
 
 
 #Blog posts
-class PostList(ListView):
+class PostList(LoginRequiredMixin,ListView):
     model = BlogPost
     queryset = BlogPost.objects.filter(status=1).order_by('-created_at')
     template_name = 'blog/index.html'
 
+@login_required
 def post_detail(request, slug):
     template_name ='blog/post_detail.html'
     post=get_object_or_404(BlogPost, slug=slug)
