@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "blog/base.html" %}
 {% block content %}
 <div>
     <h1>Blog Posts</h1>
@@ -13,10 +13,5 @@
         </div>
     </div>
     {% endfor %}
-    <div>
-        <br>
-            <a href="{% url 'category-list' %}">Categories</a>
-        <br>
-    </div>
 </div>
 {%endblock %}
