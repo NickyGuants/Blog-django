@@ -4,7 +4,7 @@ from .models import BlogPost, Category
 from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # Create your views here.
 #Category
@@ -35,7 +35,7 @@ class CreatePost(LoginRequiredMixin,CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-class UpdatePost(LoginRequiredMixin,UpdateView):
+class UpdatePost(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model= BlogPost
     fields = ['title','post', 'status', 'category']
     template_name= 'blog/post_update.html'
@@ -43,6 +43,19 @@ class UpdatePost(LoginRequiredMixin,UpdateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def test_func(self):
+        post=self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+class PostDelete(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
+    model = BlogPost
+    template_name = 'blog/post_confirm_delete.html'
+    def test_func(self):
+        post=self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
 
 @login_required
 def post_detail(request, slug):

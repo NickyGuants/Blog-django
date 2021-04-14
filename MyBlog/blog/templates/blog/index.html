@@ -2,7 +2,6 @@
 {% block content %}
 <div>
     <h1>Blog Posts</h1>
-    
     {% for post in blogpost_list %}
         <article class="media content-section">
             <img class="rounded-circle account-img" src="{{ post.author.profile.image.url }}" alt="Profile pic">
@@ -15,6 +14,8 @@
             <h5><a class="article-title" href="{% url 'category-detail' category.slug">Category: {{ post.category }}</a></h5>
             <p class="article-content">{{ post.post|slice:":200" }}</p>
             <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">Read More &rarr;</a>
+            <a href="{% url 'post-update' post.slug  %}" class="btn btn-primary">Update Post</a>
+            <a href="{% url 'post-delete' post.slug  %}" class="btn btn-primary">Delete Post</a>
             </div>
         </article>
     {% endfor %}
