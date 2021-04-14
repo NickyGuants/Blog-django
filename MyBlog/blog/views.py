@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from .models import BlogPost, Category
 from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
@@ -16,12 +16,24 @@ class CategoryDetail(LoginRequiredMixin,DetailView):
     model = Category
     template_name = 'blog/category_detail.html'
 
+class CreateCategory(CreateView):
+    model= Category
+    fields=['title']
+    template_name= 'blog/create_category.html'
 
 #Blog posts
 class PostList(LoginRequiredMixin,ListView):
     model = BlogPost
     queryset = BlogPost.objects.filter(status=1).order_by('-created_at')
     template_name = 'blog/index.html'
+
+class CreatePost(CreateView):
+    model= BlogPost
+    fields = ['title','post', 'status', 'category']
+    template_name= 'blog/create_post.html'
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 @login_required
 def post_detail(request, slug):

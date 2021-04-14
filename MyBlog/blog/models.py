@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.template.defaultfilters import slugify # new
 
 # Create your models here.
 STATUS = (
@@ -10,16 +11,21 @@ STATUS = (
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=200, unique=True, verbose_name='Categories')
+    title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
 
 
     def get_absolute_url(self):
         """Returns the url to access a particular instance of MyModelName."""
-        return reverse('category-detail', args=[str(self.id)])
+        return reverse('category-detail', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs): # new
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)
 
 
 class BlogPost(models.Model):
@@ -37,10 +43,15 @@ class BlogPost(models.Model):
 
     def get_absolute_url(self):
         """Returns the url to access a particular instance of MyModelName."""
-        return reverse('post_detail', args=[str(self.id)])
+        return reverse('post_detail', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs): # new
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)
 
 class Comment(models.Model):
     post=models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='comments')
