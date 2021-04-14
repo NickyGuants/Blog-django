@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from .models import BlogPost, Category
 from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
@@ -34,6 +34,15 @@ class CreatePost(LoginRequiredMixin,CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+class UpdatePost(LoginRequiredMixin,UpdateView):
+    model= BlogPost
+    fields = ['title','post', 'status', 'category']
+    template_name= 'blog/post_update.html'
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
 
 @login_required
 def post_detail(request, slug):
