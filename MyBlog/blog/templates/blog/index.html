@@ -2,16 +2,17 @@
 {% block content %}
 <div>
     <h1>Blog Posts</h1>
+    
     {% for post in blogpost_list %}
         <article class="media content-section">
             <img class="rounded-circle account-img" src="{{ post.author.profile.image.url }}" alt="Profile pic">
             <div class="media-body">
             <div class="article-metadata">
-                <a class="mr-2" href="#">Author: {{ post.author }}</a>
+                <a class="mr-2" href="{% url 'profile' %}">Author: {{ post.author }}</a>
                 <small class="text-muted">Posted on {{ post.created_at}}</small>
             </div>
             <h2><a class="article-title" href="{% url 'post_detail' post.slug  %}">{{ post.title }}</a></h2>
-            <h5><a class="article-title" href="#">Category: {{ post.category }}</a></h5>
+            <h5><a class="article-title" href="{% url 'category-detail' category.slug">Category: {{ post.category }}</a></h5>
             <p class="article-content">{{ post.post|slice:":200" }}</p>
             <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">Read More &rarr;</a>
             </div>

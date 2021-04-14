@@ -8,29 +8,29 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 #Category
-class CategoryList(LoginRequiredMixin,ListView):
+class CategoryList(ListView):
     model =Category
     template_name='blog/category_list.html'
 
-class CategoryDetail(LoginRequiredMixin,DetailView):
+class CategoryDetail(DetailView):
     model = Category
     template_name = 'blog/category_detail.html'
 
-class CreateCategory(CreateView):
+class CreateCategory(LoginRequiredMixin,CreateView):
     model= Category
     fields=['title']
-    template_name= 'blog/create_category.html'
+    template_name= 'blog/category_form.html'
 
 #Blog posts
-class PostList(LoginRequiredMixin,ListView):
+class PostList(ListView):
     model = BlogPost
     queryset = BlogPost.objects.filter(status=1).order_by('-created_at')
     template_name = 'blog/index.html'
 
-class CreatePost(CreateView):
+class CreatePost(LoginRequiredMixin,CreateView):
     model= BlogPost
     fields = ['title','post', 'status', 'category']
-    template_name= 'blog/create_post.html'
+    template_name= 'blog/post_form.html'
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
