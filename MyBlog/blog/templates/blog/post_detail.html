@@ -10,6 +10,10 @@
         <p class=" text-muted">Created by {{ post.author }} at {{ post.created_at }}</p>
         <p class="card-text ">{{ post.post | safe }}</p>
       </div>
+      {% if post.author == user %}
+        <a href="{% url 'post-update' post.slug  %}" class="btn btn-primary">Update Post</a>
+        <a href="{% url 'post-delete' post.slug  %}" class="btn btn-primary">Delete Post</a>
+      {% endif %}
     </div>
   </div>
 </article>
@@ -42,10 +46,10 @@
     </div>
     {% else %}
       <h3>Leave a comment</h3>
-      <form method="post" style="margin-top: 1.3em;">
+      <form method="post" >
         {{ comment_form }}
         {% csrf_token %}
-        {{ form|crispy }}
+        {{ form_as_p }}
         <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
       </form>
     {% endif %}
