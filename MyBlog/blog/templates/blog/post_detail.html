@@ -1,54 +1,54 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container">
-      <div class="col-md-8 card mb-4  mt-3 left  top">
-        <div class="card-body">
-          <h1>{% block title %} {{ post.title }} {% endblock title %}</h1>
-          <p class=" text-muted">Created by {{ post.author }} at {{ post.created_at }}</p>
-          <p class="card-text ">{{ post.post | safe }}</p>
-        </div>
-</div>
-<div>
+<article class="media content-section">
+  <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+  <div class="media-body">
+    <div class="article-metadata">
+      <div class="card-body">
+        <h1>{% block title %} {{ post.title }} {% endblock title %}</h1>
+        <p class=" text-muted">Created by {{ post.author }} at {{ post.created_at }}</p>
+        <p class="card-text ">{{ post.post | safe }}</p>
+      </div>
+    </div>
+  </div>
+</article>
+<article class="media content-section">
   <div class="card-body">
     <!-- comments -->
     {% with comments.count as total_comments %}
-    <h2>{{ total_comments }} comments</h2>
-
-    <p>
-      {% endwith %} {% for comment in comments %}
-    </p>
-
-    <div class="comments" style="padding: 10px;">
-      <p class="font-weight-bold">
-        {{ comment.name }}
-        <span class=" text-muted font-weight-normal">
-          {{ comment.created_on }}
-        </span>
+      <h2>{{ total_comments }} comments</h2>
+      <p>
+    {% endwith %} 
+    {% for comment in comments %}
       </p>
-      {{ comment.body | linebreaks }}
-    </div>
-
+      <div class="comments" style="padding: 10px;">
+        <p class="font-weight-bold">
+          {{ comment.name }}
+          <span class=" text-muted font-weight-normal">
+            {{ comment.created_on }}
+          </span>
+        </p>
+        {{ comment.body | linebreaks }}
+      </div>
     {% endfor %}
   </div>
-</div>
-<div>
+</article>
+<article class="media content-section">
   <div class="card-body">
     {% if new_comment %}
     <div class="alert alert-success" role="alert">
       Your comment is awaiting moderation
     </div>
     {% else %}
-    <h3>Leave a comment</h3>
-    <form method="post" style="margin-top: 1.3em;">
-      {{ comment_form }}
-      {% csrf_token %}
-      {{ form|crispy }}
-      <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
-    </form>
+      <h3>Leave a comment</h3>
+      <form method="post" style="margin-top: 1.3em;">
+        {{ comment_form }}
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
+      </form>
     {% endif %}
   </div>
-</div>
-</div>
-</div>
+</article>
 {%endblock %}
