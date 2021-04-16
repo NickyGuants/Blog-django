@@ -1,3 +1,4 @@
+from django.core import paginator
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from .models import BlogPost, Category
@@ -5,12 +6,14 @@ from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.paginator import Paginator
 
 # Create your views here.
 #Category
 class CategoryList(ListView):
     model =Category
     template_name='blog/category_list.html'
+    paginate_by= 1
 
 class CategoryDetail(DetailView):
     model = Category
@@ -26,6 +29,7 @@ class PostList(ListView):
     model = BlogPost
     queryset = BlogPost.objects.filter(status=1).order_by('-created_at')
     template_name = 'blog/index.html'
+    paginate_by= 1
 
 class CreatePost(LoginRequiredMixin,CreateView):
     model= BlogPost
@@ -64,7 +68,7 @@ def post_detail(request, slug):
     post=get_object_or_404(BlogPost, slug=slug)
     comments= post.comments.filter(active=True)
     new_comment=None
-
+    
     #comment posted
     if request.method== 'POST':
         comment_form= CommentForm(data=request.POST)
@@ -81,4 +85,6 @@ def post_detail(request, slug):
     return render(request, template_name, {'post': post, 
                                             'comments': comments, 
                                             'new_comment': new_comment, 
-                                            'comment_form': comment_form})
+                                            'comment_form': comment_form
+                                            }
+                                            )
