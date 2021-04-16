@@ -13,7 +13,7 @@ from django.core.paginator import Paginator
 class CategoryList(ListView):
     model =Category
     template_name='blog/category_list.html'
-    paginate_by= 1
+    paginate_by= 5
 
 class CategoryDetail(DetailView):
     model = Category
@@ -29,7 +29,14 @@ class PostList(ListView):
     model = BlogPost
     queryset = BlogPost.objects.filter(status=1).order_by('-created_at')
     template_name = 'blog/index.html'
-    paginate_by= 1
+    paginate_by= 5
+
+class UserPostList(ListView):
+    model = BlogPost
+    template_name = 'blog/user_post.html'
+    paginate_by= 5
+    
+        
 
 class CreatePost(LoginRequiredMixin,CreateView):
     model= BlogPost
