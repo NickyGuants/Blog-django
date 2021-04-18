@@ -6,7 +6,7 @@ from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.paginator import Paginator
+from django.contrib.auth.models import User
 
 # Create your views here.
 #Category
@@ -33,9 +33,12 @@ class PostList(ListView):
 
 class UserPostList(ListView):
     model = BlogPost
-    template_name = 'blog/user_post.html'
+    template_name = 'blog/user_posts.html'
     paginate_by= 5
     
+    def get_queryset(self):
+        user= get_object_or_404(User, username= self.kwargs.get('username'))
+        return BlogPost.objects.filter(author=user).order_by('-created_at')
         
 
 class CreatePost(LoginRequiredMixin,CreateView):
