@@ -49,9 +49,9 @@
     {% else %}
       <h3>Leave a comment</h3>
       <form method="post" >
-        {{ comment_form }}
+        {{ comment_form.as_p }}
         {% csrf_token %}
-        {{ form_as_p }}
+        {{ form|crispy }}
         <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
       </form>
     {% endif %}
