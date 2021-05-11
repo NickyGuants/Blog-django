@@ -11,5 +11,5 @@ urlpatterns = [
     path('<slug:slug>/delete/', views.PostDelete.as_view(), name='post-delete'),
     path('category/<slug:slug>', views.CategoryDetail.as_view(), name='category-detail'),
     path('new/category/', views.CreateCategory.as_view(), name='create-category'),
-
+    path('<slug:slug>/share/',views.post_share, name='post-share'),
 ]

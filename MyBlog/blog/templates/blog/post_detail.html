@@ -14,7 +14,9 @@
         <a href="{% url 'post-update' post.slug  %}" class="btn btn-primary">Update Post</a>
         <a href="{% url 'post-delete' post.slug  %}" class="btn btn-primary">Delete Post</a>
       {% endif %}
+      <a href="{% url 'post-share' post.id  %}" class="btn btn-primary">Share Post</a>
     </div>
+    
   </div>
 </article>
 <article class="media content-section">

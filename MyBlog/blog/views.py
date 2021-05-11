@@ -2,11 +2,12 @@ from django.core import paginator
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from .models import BlogPost, Category
-from .forms import CommentForm
+from .forms import CommentForm,EmailPostForm
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 # Create your views here.
 #Category
@@ -98,3 +99,29 @@ def post_detail(request, slug):
                                             'comment_form': comment_form
                                             }
                                             )
+
+def post_share(request,slug):
+# Retrieve post by id
+    post = get_object_or_404(BlogPost,id=slug)
+    sent=False
+
+    if request.method == 'POST':
+    # Form was submitted
+        form = EmailPostForm(request.POST)
+        if form.is_valid():
+            # Form fields passed validation
+            cd = form.cleaned_data
+            # ... send email
+            post_url = request.build_absolute_uri(
+            post.get_absolute_url())
+            subject = f"{cd['name']} recommends you read " \
+            f"{post.title}"
+            message = f"Read {post.title} at {post_url}\n\n" \
+            f"{cd['name']}\'s comments: {cd['comments']}"
+            send_mail(subject, message, 'tembeguants@gmail.com',
+            [cd['receipient']])
+            sent = True
+            return render(request, 'blog/post_detail.html', {'post': post,'form': form})
+    else:
+        form = EmailPostForm()
+    return render(request, 'blog/share.html', {'post': post,'form': form})

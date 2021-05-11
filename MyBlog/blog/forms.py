@@ -9,6 +9,6 @@ class CommentForm(forms.ModelForm):
 
 class EmailPostForm(forms.Form):
     name=forms.CharField(max_length=25)
-    email=forms.EmailField()
+    #email=forms.EmailField()
     receipient=forms.EmailField()
     comments=forms.CharField(required=False, widget=forms.Textarea)
