@@ -1,4 +1,4 @@
-from django.core import paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from .models import BlogPost, Category
@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from taggit.models import Tag
 
 # Create your views here.
 #Category
@@ -31,6 +32,21 @@ class PostList(ListView):
     queryset = BlogPost.objects.filter(status=1).order_by('-created_at')
     template_name = 'blog/index.html'
     paginate_by= 5
+    
+def post_list(request,tag_slug=None):
+    queryset = BlogPost.objects.filter(status=1).order_by('-created_at')
+    #post_list=BlogPost.objects.all()
+    paginator=Paginator(queryset, 3)
+    template_name = 'blog/index.html'
+    tag=None
+
+    if tag_slug:
+        tag=get_object_or_404(Tag, slug=tag_slug)
+        queryset=queryset.filter(tags__in=[tag])
+    page = request.GET.get('page')
+    posts = paginator.get_page(page)
+
+    return render(request, template_name, {'posts': posts,'tag': tag})
 
 class UserPostList(ListView):
     model = BlogPost
@@ -52,7 +68,7 @@ class CreatePost(LoginRequiredMixin,CreateView):
 
 class UpdatePost(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model= BlogPost
-    fields = ['title','post', 'status', 'category']
+    fields = ['title','post', 'status', 'category','tags']
     template_name= 'blog/post_update.html'
     def form_valid(self, form):
         form.instance.author = self.request.user

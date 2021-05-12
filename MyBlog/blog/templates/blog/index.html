@@ -12,6 +12,7 @@
             </div>
             <h2><a class="article-title" href="{% url 'post_detail' post.slug  %}">{{ post.title }}</a></h2>
             <h5><a class="article-title" href="{% url 'category-detail' category.slug">Category: {{ post.category }}</a></h5>
+            <p class="tags">Tags: {{ post.tags.all|join:", " }}</p>
             <p class="article-content">{{ post.post|slice:":200" }}</p>
             <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">Read More &rarr;</a>
             </div>

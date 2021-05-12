@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.template.defaultfilters import slugify # new
-
+from taggit.managers import TaggableManager
 # Create your models here.
 STATUS = (
     (0, 'Draft'),
@@ -37,6 +37,7 @@ class BlogPost(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS, default=0)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    tags=TaggableManager()
 
     class Meta:
         ordering = ['-created_at']
